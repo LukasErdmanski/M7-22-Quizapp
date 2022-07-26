@@ -1,0 +1,60 @@
+.dNone {
+  display: none;
+}
+
+.dialog {
+  background-color: rgba(38, 38, 38, 50%);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.dialogWindow {
+  position: fixed;
+  top: 5vh;
+  width: fit-content;
+  max-width: calc(100% * 0.85);
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: rgb(250, 250, 250);
+  border-radius: 2vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialogTitle {
+  border-bottom: 2px solid rgb(100, 100, 100);
+  text-align: center;
+  width: 100%;
+}
+
+.dialogParagraph1 {
+  text-align: center;
+  font-weight: 500;
+  font-size: 18px;
+  padding: 0 16px;
+}
+
+.dialogParagraph2 {
+  text-align: center;
+  font-weight: 500;
+  font-style: italic;
+  font-size: 14x;
+  padding: 0 16px;
+}
+
+.dialogCloser {
+  text-align: center;
+  margin: 18px 0;
+  background-color: black;
+  width: 30px;
+  color: white;
+  cursor: pointer;
+}

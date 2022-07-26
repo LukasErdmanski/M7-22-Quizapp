@@ -1,0 +1,166 @@
+/* Hide scrollbar for Chrome, Safari and Opera */
+html::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+html {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.appWindow {
+    background-color: #f4edff !important;
+}
+
+.progress {
+    min-height: 16px;
+}
+
+.navContent {
+    max-height: -webkit-fill-available;
+}
+
+.fs-4 {
+    word-break: normal;
+}
+
+.logo img {
+    width: 64px;
+}
+
+.bg-light {
+    background-color: rgb(242, 242, 242) !important;
+}
+
+.flex-sw-row {
+    height: 700px;
+}
+
+#questionText {
+    min-height: 102px;
+    word-break: normal;
+}
+
+.answerBtn {
+    max-width: 680px;
+}
+
+.answerBtnHover:hover {
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+.cp:hover {
+    cursor: pointer;
+}
+
+.badgeLight {
+    background-color: lightgrey;
+    line-height: 100% !important;
+}
+
+.badgeSuccess {
+    background-color: rgba(18, 99, 61, 0.8);
+}
+
+.badgeDanger {
+    background-color: rgb(132, 32, 40, 0.8);
+}
+
+.arrow {
+    height: 50px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(179, 193, 255)
+}
+
+.arrows {
+    font-size: 30px;
+}
+
+.welcomeBg {
+    background-image: url('img/bg\ b.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.circle {
+    width: 90%;
+    max-width: 680px !important;
+    aspect-ratio: 1 / 1;
+    background-color: rgb(246, 205, 164);
+}
+
+.orangeBg {
+    background-color: rgb(255, 72, 0) !important;
+    color: #fff;
+    width: 38%;
+}
+
+.widthStartBtn {
+    width: fit-content;
+}
+
+.orangeColor {
+    color: rgb(255, 72, 0);
+}
+
+@media (min-width: 767px) {
+    .answerBtn {
+        word-break: break-all;
+    }
+}
+
+@media (min-width: 576px) {
+    .logo {
+        position: absolute;
+        top: 40px;
+    }
+}
+
+@media (max-width: 767px) {
+    .fs-4 {
+        font-size: calc(0.95rem + .3vw) !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .flex-sw-row {
+        height: 100%;
+    }
+
+    .fs-4 {
+        font-size: calc(0.8rem + .3vw) !important;
+        word-break: break-all;
+    }
+}
+
+@media (max-height: 600px) {
+    .fs-4 {
+        font-size: calc(0.8rem + .3vw) !important;
+    }
+
+    #questionText {
+        height: fit-content !important;
+        margin: auto !important;
+    }
+
+    .circle {
+        width: 90%;
+        max-width: 540px !important;
+        aspect-ratio: 1 / 1;
+        background-color: rgb(246, 205, 164);
+    }
+}
+
+@media (max-height: 600px) and (min-width: 1024px) {
+    .flex-sw-row {
+        height: 100% !important;
+    }
+
+}

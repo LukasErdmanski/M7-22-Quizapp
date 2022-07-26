@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App by Lukas E.</title>
+    <link rel="icon" href="img/logo 2.png">
+
+    <!-- This sets the application height to the height of the device windows innerHeight at the beginning before the html body is build ("solution for the the safari browser in order no y-overflow arises because of the adress bar). -->
+    <script src="appHeight.js"></script>
+
+    <!-- bootstrap@5.2.0-beta1 -->
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+    <!-- custom CSS General -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- custom CSS showInfoFktnNotExists-->
+    <link rel="stylesheet" href="styleDialogFktnNotExist.css">
+
+    <!-- Bootstrap Icons via CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+</head>
+
+<body class="bg-dark d-flex min-vw-100 h-100 justify-content-center " onload="init()"
+    onkeydown="closeDialogOnEscKey(event)">
+    <!-- #region appWindow -->
+    <div class="container-xxl d-flex flex-column justify-content-start h-100 appWindow p-0  position-fixed">
+
+        <!-- #region progess bar -->
+        <div class="progress bg-secondary rounded-0 border-bottom border-1 border-dark">
+            <div id="progressBar" class="progress-bar rounded-end" role="progressbar" aria-label="Example with label"
+                style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <!-- endregion progess bar -->
+
+        <!-- #region navbarContent -->
+        <div class="navContent container-fluid d-flex flex-grow-1 fs-4 px-0 align-items-sm-center">
+            <div class="d-flex flex-column flex-sw-row mx-0 flex-grow-1">
+                <div
+                    class="col-lg-10 col-sm-12 d-flex flex-column flex-grow-1 flex-sm-row p-0 mx-0 mx-sm-auto  shadow-lg">
+
+                    <!-- #region navbar -->
+                    <nav class="navbar navbar-expand-sm navbar-dark bg-primary py-0">
+                        <div class="container-fluid flex-row-reverse flex-sm-column ">
+
+                            <a class="navbar-brand me-0 logo" href="#" onclick="init()">
+                                <img src="img/logo 2.png" alt="Logo image">
+                            </a>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+
+
+                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                <ul
+                                    class="navbar-nav me-auto m-1 mb-lg-0 flex-row flex-sm-column justify-content-around">
+                                    <li class="nav-item" onclick="changeQuiz(questionsHTML, 'HTML', 1)">
+                                        <a id="nav-link1" class="nav-link active" aria-current="page" href="#">HTML</a>
+                                    </li>
+                                    <li class="nav-item" onclick="changeQuiz(questionsCSS, 'CSS', 2)">
+                                        <a id="nav-link2" class="nav-link" href="#">CSS</a>
+                                    </li>
+                                    <li class="nav-item" onclick="changeQuiz(questionsJS, 'JavaScript', 3)">
+                                        <a id="nav-link3" class="nav-link" href="#">JavaScript</a>
+                                    </li>
+                                    <li class="nav-item" onclick="changeQuiz(questionsPython, 'Python', 4)">
+                                        <a id="nav-link4" class="nav-link" href="#">Python</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
+                    <!-- endregion navbar -->
+
+                    <!-- #region content start screen -->
+                    <div id="startScreen"
+                        class="container-fluid bg-light d-flex flex-column align-items-center flex-grow-1 welcomeBg justify-content-center text-center fs-1 fw-bold ">
+                        Welcome
+                        to<br>The Awesome <span id="selectedQuizTitle">HTML</span> Quiz
+                        <button class="btn orangeBg rounded-3 py-sm-1 fs-5 my-5 widthStartBtn"
+                            onclick="showQuestionsContent()">Starte
+                            das
+                            <span id="selectedQuizBtn">HTML</span> Quiz</button>
+                    </div>
+                    <!-- endregion content start screen-->
+
+                    <!-- #region content questions -->
+                    <div id="questions"
+                        class="d-none container-fluid bg-light d-flex flex-column align-items-center flex-grow-1 w-100 ">
+
+                        <!-- #region question text -->
+                        <span id="questionText"
+                            class="fw-bold d-flex align-items-center rounded-0 answerBtn w-100 my-1 my-sm-4"></span>
+                        <!-- endregion question text -->
+
+                        <!-- #region answers -->
+
+                        <!-- symbols -->
+                        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                            <!-- the right answer symbol -->
+                            <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+                                <path
+                                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                            </symbol>
+                            <!-- the wrong answer symbol -->
+                            <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+                                <path
+                                    d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                            </symbol>
+                        </svg>
+
+                        <!-- answer A -->
+                        <div id="answerContainer1" onclick="answer(1)"
+                            class="alert alert-light d-flex align-items-center rounded-0 answerBtn answerBtnHover cp w-100 mb-1 mb-sm-3 p-1 p-sm-3"
+                            role="alert">
+                            <span id="answerBadge1"
+                                class="badge text-black rounded-0 me-2 me-md-5 badgeLight p-3">A</span>
+                            <div id="answer1"></div>
+                            <svg id="rightAnswerSymbol1" class="bi flex-shrink-0 ms-auto d-none" width="24" height="24"
+                                role="img" aria-label="Success:">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <svg id="wrongAnswerSymbol1" class="bi flex-shrink-0 ms-auto d-none" width="24" height="24"
+                                role="img" aria-label="Danger:">
+                                <use xlink:href="#exclamation-triangle-fill" />
+                            </svg>
+                        </div>
+
+                        <!-- answer B -->
+                        <div id="answerContainer2" onclick="answer(2)"
+                            class="alert alert-light d-flex align-items-center rounded-0 answerBtn answerBtnHover cp w-100 mb-1 mb-sm-3 p-1 p-sm-3"
+                            role="alert">
+                            <span id="answerBadge2"
+                                class="badge text-black rounded-0 me-2 me-md-5 badgeLight p-3">B</span>
+                            <div id="answer2"></div>
+                            <svg id="rightAnswerSymbol2" class="bi flex-shrink-0 ms-auto d-none" width="24" height="24"
+                                role="img" aria-label="Success:">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <svg id="wrongAnswerSymbol2" class="bi flex-shrink-0 ms-auto d-none" width="24" height="24"
+                                role="img" aria-label="Danger:">
+                                <use xlink:href="#exclamation-triangle-fill" />
+                            </svg>
+                        </div>
+
+                        <!-- answer C -->
+                        <div id="answerContainer3" onclick="answer(3)"
+                            class="alert alert-light d-flex align-items-center rounded-0 answerBtn answerBtnHover cp w-100 mb-1 mb-sm-3 p-1 p-sm-3"
+                            role="alert">
+                            <span id="answerBadge3"
+                                class="badge text-black rounded-0 me-2 me-md-5 badgeLight p-3">C</span>
+                            <div id="answer3"></div>
+                            <svg id="rightAnswerSymbol3" class="bi flex-shrink-0 ms-auto d-none" width="24" height="24"
+                                role="img" aria-label="Success:">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <svg id="wrongAnswerSymbol3" class="bi flex-shrink-0 ms-auto d-none" width="24" height="24"
+                                role="img" aria-label="Danger:">
+                                <use xlink:href="#exclamation-triangle-fill" />
+                            </svg>
+                        </div>
+
+                        <!-- answer D -->
+                        <div id="answerContainer4" onclick="answer(4)"
+                            class="alert alert-light d-flex align-items-center rounded-0 answerBtn answerBtnHover cp w-100 mb-1 mb-sm-3 p-1 p-sm-3"
+                            role="alert">
+                            <span id="answerBadge4"
+                                class="badge text-black rounded-0 me-2 me-md-5 badgeLight p-3">D</span>
+                            <div id="answer4"></div>
+                            <svg id="rightAnswerSymbol4" class="bi flex-shrink-0 ms-auto d-none" width="24" height="24"
+                                role="img" aria-label="Success:">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <svg id="wrongAnswerSymbol4" class="bi flex-shrink-0 ms-auto d-none" width="24" height="24"
+                                role="img" aria-label="Danger:">
+                                <use xlink:href="#exclamation-triangle-fill" />
+                            </svg>
+                        </div>
+                        <!-- endregion answers -->
+
+                        <!-- #region chevrons -->
+                        <div
+                            class="container d-flex flex-row justify-content-between arrows my-2 my-sm-2 flex-grow-1 align-items-end px-0">
+                            <div class="w-100 d-flex flex-row justify-content-between align-items-center">
+                                <button id="previous-btn" class="border border-0 bg-transparent px-0 cp"
+                                    onclick="previousQuestion()" disabled>
+                                    <i class="arrow bi bi-chevron-left rounded-circle"></i>
+                                </button>
+                                <span class="fs-4 text-center"><b id="completedQuestions"></b> von <b
+                                        id="allQuestions"></b>
+                                    Fragen</span>
+                                <button id="next-btn" class="border border-0 bg-transparent px-0 cp"
+                                    onclick="nextQuestion()" disabled>
+                                    <i class="arrow bi bi-chevron-right rounded-circle"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- endregion chevrons -->
+
+                    </div>
+                    <!-- endregion content questions -->
+
+                    <!-- #region content end screen -->
+                    <div id="endScreen"
+                        class="d-none container-fluid bg-light d-flex flex-column flex-grow-1 align-items-center justify-content-center">
+                        <div class="rounded-circle circle d-flex flex-column align-items-center justify-content-evenly">
+
+                            <div class="d-flex justify-content-center"><img class="w-75" src="img/Group 5.png" alt="">
+                            </div>
+                            <span class="fw-bold lh-sm text-center">COMPLETE<br>
+                                <span id="completedSelectedQuiz"></span> QUIZ</span>
+                            <div class="fw-bold text-primary d-flex justify-content-evenly w-75">
+                                <span>YOUR SCORE:</span>
+                                <span class="text-dark"><span id="rightQuestions"></span>/<span
+                                        id="ofAllQuestions"></span></span>
+                            </div>
+                            <button class="btn orangeBg rounded-3 py-0 py-sm-1 fs-4"
+                                onclick="showInfoFktnNotExist()">SHARE</button>
+                            <span class="fw-semibold orangeColor cp" onclick="resetGame()">REPLAY</span>
+
+                        </div>
+                    </div>
+                    <!-- endregion content end screen-->
+
+                </div>
+            </div>
+        </div>
+        <!-- endregion navbarContent -->
+
+    </div>
+    <!-- endregion appWindow-->
+
+    <!-- #region dialog with information: The clicked function was not intended for this project or is not yet available.-->
+    <div id="dialog" class="dialog dNone">
+        <div class="dialogWindow">
+            <div class="dialogTitle">
+                <h2>Info</h2>
+            </div>
+            <div class="dialogParagraph1">
+                <p>Die Funktion wurde in diesem Projekt nicht vorgesehen bzw. ist noch nicht vorhanden.</p>
+            </div>
+            <div class="dialogParagraph2">
+                <p>Klicke unten auf den X-Button oder drücke die Escape-Taste, um das Info-Fenster zu schlißsen.</p>
+            </div>
+            <h2 onclick="closeDialog()" class="dialogCloser">X</h2>
+        </div>
+    </div>
+    <!-- endregion dialog with information: The clicked function was not intended for this project or is not yet available.-->
+
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+        crossorigin="anonymous"></script>
+
+    <!-- custonm JavaScripts-->
+    <script src="questions.js"></script>
+    <script src="script.js"></script>
+    <script src="showInfoFktnNotExists.js"></script>
+
+</body>
+
+</htm
