@@ -264,6 +264,7 @@ function stylePlaySaveWrongAnswer(selection, rightAnswer) {
 
     document.getElementById(`answerBadge${rightAnswer}`).classList.replace('badgeLight', 'badgeSuccess');
     document.getElementById(`answerContainer${rightAnswer}`).classList.replace('alert-light', 'alert-success');
+    document.getElementById(`rightAnswerSymbol${rightAnswer}`).classList.remove('d-none');
     document.getElementById(`answerContainer${rightAnswer}`).classList.remove('answerBtnHover');
 
     AUDIO_FAIL.play();
