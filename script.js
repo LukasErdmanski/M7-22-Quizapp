@@ -21,6 +21,7 @@ resets all game variables
 and answer buttons by the means of the the function changeQuiz. 
 This also loops and starts background music. */
 function init() {
+    document.documentElement.classList.remove('d-none');
     questions = questionsCSS;
     changeQuiz(questionsHTML, 'HTML', 1);
 }
