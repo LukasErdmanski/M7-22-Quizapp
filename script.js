@@ -1,13 +1,16 @@
 // The currently selected collection of questions is loaded in the variable questions, initially the HTML questions.
 let questions = questionsCSS;
 let selectedQuiz = 1;
-currentQuestion = 0;
-correctnessOfAnswers = [];
-rightQuestions = 0;
+let currentQuestion = 0;
+let correctnessOfAnswers = [];
+let rightQuestions = 0;
+let clicked = false;
+let currentPlayingAudio;
 
-// Tones that are played after selecting the answer.
-let AUDIO_SUCCESS = new Audio('audio/success.mp3');
-let AUDIO_FAIL = new Audio('audio/fail.mp3');
+
+// Sounds that are played after selecting the answer.
+let success = new Audio('audio/success.mp3');
+let fail = new Audio('audio/fail.mp3');
 let bgMusic = new Audio('audio/backgroundMusicLoop.mp3');
 
 
@@ -18,10 +21,8 @@ resets all game variables
 and answer buttons by the means of the the function changeQuiz. 
 This also loops and starts background music. */
 function init() {
-    bgMusic.loop = true;
-    bgMusic.play();
     questions = questionsCSS;
-    changeQuiz(questionsHTML, 'HTML', 1)
+    changeQuiz(questionsHTML, 'HTML', 1);
 }
 
 
@@ -31,6 +32,9 @@ the innerHTML content of the elements, which contain the name of the selected qu
 This resets the game starting variables by means of function resetGame(). */
 function changeQuiz(quiz, language, number) {
     if (questions != quiz) {
+        bgMusic.pause();
+        bgMusic.currentTime = 0;
+
         stopAudio();
 
         questions = quiz;
@@ -63,18 +67,36 @@ function setSelectedLanguage(language) {
 }
 
 
-// This resets the current playing audio.
-function stopAudio() {
-    AUDIO_SUCCESS.pause();
-    AUDIO_SUCCESS.currentTime = 0;
-
-    AUDIO_FAIL.pause();
-    AUDIO_FAIL.currentTime = 0;
+// This stops the current playing audio and play (by means of load() funktion) the selected one.
+function playAudio(audio) {
+    stopAudio();
+    audio.addEventListener("canplay", function onCanPlay() {
+        audio.removeEventListener("canplay", onCanPlay);
+        audio.play();
+    });
+    audio.load();
 }
 
 
+// This sets the current playing audio on puase state and currentTime on zero.
+function stopAudio() {
+    if (currentPlayingAudio !== undefined) {
+        currentPlayingAudio.pause();
+        currentPlayingAudio.currentTime = 0;
+    }
+};
+
+
+// Custom property for HTMLMediaElements which 
+Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
+    get: function () {
+        return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
+    }
+})
+
+
 /* This resets progress bar, 
-the variables currentQuestion, rightQuestions , the array correctnessOfAnswers
+the variables currentQuestion, rightQuestions, clicked, the array correctnessOfAnswers
  and all style of the answer buttons before the new game.
 This shows the start screen. */
 function resetGame() {
@@ -85,6 +107,7 @@ function resetGame() {
     currentQuestion = 0;
     correctnessOfAnswers = [];
     rightQuestions = 0;
+    clicked = false;
     resetAnswerButtons()
 }
 
@@ -108,8 +131,8 @@ function showStartScreen() {
 function resetAnswerButtons() {
     for (let i = 1; i < 5; i++) {
         resetStyleOfRightAnswer(i);
-
         resetStyleOfWrongAnswers(i);
+        makeSelectable();
     }
     makePreviousBtnVisible();
 }
@@ -120,7 +143,6 @@ function resetStyleOfRightAnswer(i) {
     document.getElementById(`answerBadge${i}`).classList.replace('badgeSuccess', 'badgeLight');
     document.getElementById(`answerContainer${i}`).classList.replace('alert-success', 'alert-light');
     document.getElementById(`rightAnswerSymbol${i}`).classList.add('d-none');
-    document.getElementById(`answerContainer${i}`).classList.add('answerBtnHover');
 }
 
 
@@ -129,7 +151,6 @@ function resetStyleOfWrongAnswers(i) {
     document.getElementById(`answerBadge${i}`).classList.replace('badgeDanger', 'badgeLight');
     document.getElementById(`answerContainer${i}`).classList.replace('alert-danger', 'alert-light');
     document.getElementById(`wrongAnswerSymbol${i}`).classList.add('d-none');
-    document.getElementById(`answerContainer${i}`).classList.add('answerBtnHover');
 }
 
 
@@ -152,6 +173,7 @@ function showQuestionsContent() {
     document.getElementById('questions').classList.remove('d-none');
     document.getElementById('endScreen').classList.add('d-none');
     showQuestion();
+    bgMusic.play();
 }
 
 
@@ -162,6 +184,9 @@ Otherise it shows the end screen with the quiz result. */
 function showQuestion() {
     if (currentQuestion >= questions.length) {
         showEndScreen();
+        // Set the progress bar to 100%, becuase the updateProgressBar funkction will not be executed any more  an the end.
+        document.getElementById('progressBar').innerHTML = '100%';
+        document.getElementById('progressBar').style.width = `100%`;
     } else {
         updateQuestion();
         updateProgressBar();
@@ -209,10 +234,7 @@ function updateQuestion() {
 /* This calculates the %-part of the all questions that have been completed
  and accordingly changes the %-number in the progress bar and its width. */
 function updateProgressBar() {
-    /* The question numbering for the correct presentation should not start with question No. 0 for the percentage calculation, but at No. 1. 
-    On the other hand currentQuestion = 0 / Array.lenght gives 0% for the width of the prograss bar, 
-    which would display the wrong % progress bar. */
-    let percent = (currentQuestion + 1) / questions.length;
+    let percent = (currentQuestion) / questions.length;
     percent = Math.round(percent * 100);
 
     document.getElementById('progressBar').innerHTML = percent + '%';
@@ -220,25 +242,32 @@ function updateProgressBar() {
 }
 
 
-// This checks if selected answer is correct and accordingly signals the test result.
+/* This checks if selected answer is correct and accordingly signals the test result, 
+if no answer war already clicked. */
 function answer(selection) {
-    stopAudio();
-    // Setting of current question and its right answer
-    let rightAnswer = questions[currentQuestion]['rightAnswer'];
+    if (!clicked) {
+        stopAudio();
+        // Setting of current question and its right answer
+        let rightAnswer = questions[currentQuestion]['rightAnswer'];
 
-    /* This styles the selected asnwer red or green, 
-    plays success or fail sound according to the correctness of the answer, 
-    save the correctness of the answered questions in the array correctnessOfAnswers to the check:
-    if the selected answer is the right one. */
-    if (selection == rightAnswer) {
-        stylePlaySaveRightAnswer(selection);
-    } else {
-        stylePlaySaveWrongAnswer(selection, rightAnswer);
+        /* This styles the selected asnwer red or green, 
+        plays success or fail sound according to the correctness of the answer, 
+        save the correctness of the answered questions in the array correctnessOfAnswers to the check:
+        if the selected answer is the right one. */
+        if (selection == rightAnswer) {
+            stylePlaySaveRightAnswer(selection);
+            makeUnselectable();
+        } else {
+            stylePlaySaveWrongAnswer(selection, rightAnswer);
+            makeUnselectable();
+        }
+        // This sets the state clicked on true.
+        clicked = true;
+
+        // This enables the next ans previus question button.
+        enableBtn();
+        console.log(correctnessOfAnswers);
     }
-
-    // This enables the next ans previus question button.
-    enableBtn();
-    console.log(correctnessOfAnswers);
 }
 
 
@@ -247,9 +276,8 @@ function stylePlaySaveRightAnswer(selection) {
     document.getElementById(`answerBadge${selection}`).classList.replace('badgeLight', 'badgeSuccess');
     document.getElementById(`answerContainer${selection}`).classList.replace('alert-light', 'alert-success');
     document.getElementById(`rightAnswerSymbol${selection}`).classList.remove('d-none');
-    document.getElementById(`answerContainer${selection}`).classList.remove('answerBtnHover');
 
-    AUDIO_SUCCESS.play();
+    playAudio(success);
 
     saveAnswer(currentQuestion, true);
 }
@@ -260,16 +288,30 @@ function stylePlaySaveWrongAnswer(selection, rightAnswer) {
     document.getElementById(`answerBadge${selection}`).classList.replace('badgeLight', 'badgeDanger');
     document.getElementById(`answerContainer${selection}`).classList.replace('alert-light', 'alert-danger');
     document.getElementById(`wrongAnswerSymbol${selection}`).classList.remove('d-none');
-    document.getElementById(`answerContainer${selection}`).classList.remove('answerBtnHover');
 
     document.getElementById(`answerBadge${rightAnswer}`).classList.replace('badgeLight', 'badgeSuccess');
     document.getElementById(`answerContainer${rightAnswer}`).classList.replace('alert-light', 'alert-success');
     document.getElementById(`rightAnswerSymbol${rightAnswer}`).classList.remove('d-none');
-    document.getElementById(`answerContainer${rightAnswer}`).classList.remove('answerBtnHover');
 
-    AUDIO_FAIL.play();
+    playAudio(fail);
 
     saveAnswer(currentQuestion, false);
+}
+
+
+// This makes the rest of question unselectable.
+function makeUnselectable() {
+    for (let i = 1; i < 5; i++) {
+        document.getElementById(`answerContainer${i}`).classList.remove('answerBtnHover', 'cp');
+    }
+}
+
+
+// This makes all question unselectable.
+function makeSelectable() {
+    for (let i = 1; i < 5; i++) {
+        document.getElementById(`answerContainer${i}`).classList.add('answerBtnHover', 'cp');
+    }
 }
 
 
@@ -304,11 +346,13 @@ function previousQuestion() {
 
 
 /* This stop the currently playying audio,
+reset the state clicked,
 disables the next and previous question button, 
 reset the styles of the answers, +
 shows the question. */
 function loadQuestion() {
     stopAudio();
+    clicked = false;
     document.getElementById('next-btn').disabled = true;
     document.getElementById('previous-btn').disabled = true;
     resetAnswerButtons();
