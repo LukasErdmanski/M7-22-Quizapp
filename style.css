@@ -11,6 +11,10 @@ html {
     /* Firefox */
 }
 
+body {
+    background-color: #f4edff !important;
+}
+
 .appWindow {
     background-color: #f4edff !important;
 }
@@ -19,7 +23,7 @@ html {
     min-height: 16px;
 }
 
-.navContent {
+.progressBarNavContent {
     max-height: -webkit-fill-available;
 }
 

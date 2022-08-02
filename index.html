@@ -26,23 +26,29 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 </head>
 
-<body class="bg-dark d-flex min-vw-100 h-100 justify-content-center " onload="init()"
-    onkeydown="closeDialogOnEscKey(event)">
+<body class="d-flex min-vw-100 h-100 justify-content-center " onload="init()" onkeydown="closeDialogOnEscKey(event)">
     <!-- #region appWindow -->
     <div class="container-xxl d-flex flex-column justify-content-start h-100 appWindow p-0  position-fixed">
 
-        <!-- #region progess bar -->
-        <div class="progress bg-secondary rounded-0 border-bottom border-1 border-dark">
-            <div id="progressBar" class="progress-bar rounded-end" role="progressbar" aria-label="Example with label"
-                style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-        </div>
-        <!-- endregion progess bar -->
+        <!-- #region progressBarNavbarContent -->
+        <div class="progressBarNavContent container-fluid d-flex flex-grow-1 fs-4 px-0 align-items-sm-center">
 
-        <!-- #region navbarContent -->
-        <div class="navContent container-fluid d-flex flex-grow-1 fs-4 px-0 align-items-sm-center">
             <div class="d-flex flex-column flex-sw-row mx-0 flex-grow-1">
+
+                <!-- #region progess bar -->
+                <div class="col-lg-10 col-sm-12 mx-sm-auto">
+                    <div class="progress bg-secondary rounded-0 border-bottom border-1 border-dark">
+                        <div id="progressBar" class="progress-bar rounded-end" role="progressbar"
+                            aria-label="Example with label" style="width: 0%;" aria-valuenow="25" aria-valuemin="0"
+                            aria-valuemax="100">
+                        </div>
+                    </div>
+                </div>
+                <!-- endregion progess bar -->
+
+                <!-- #region navbarContent -->
                 <div
-                    class="col-lg-10 col-sm-12 d-flex flex-column flex-grow-1 flex-sm-row p-0 mx-0 mx-sm-auto  shadow-lg">
+                    class="col-lg-10 col-sm-12 d-flex flex-column flex-grow-1 flex-sm-row p-0 mx-0 mx-sm-auto shadow-lg">
 
                     <!-- #region navbar -->
                     <nav class="navbar navbar-expand-sm navbar-dark bg-primary py-0">
@@ -117,12 +123,12 @@
                         </svg>
 
                         <!-- answer A -->
-                        <div id="answerContainer1" onclick="answer(1)"
+                        <button id="answerButton1" onclick="answer(1)"
                             class="alert alert-light d-flex align-items-center rounded-0 answerBtn answerBtnHover cp w-100 mb-1 mb-sm-3 p-1 p-sm-3"
                             role="alert">
                             <span id="answerBadge1"
                                 class="badge text-black rounded-0 me-2 me-md-5 badgeLight p-3">A</span>
-                            <div id="answer1"></div>
+                            <div id="answer1" class="text-start"></div>
                             <svg id="rightAnswerSymbol1" class="bi flex-shrink-0 ms-auto d-none" width="24" height="24"
                                 role="img" aria-label="Success:">
                                 <use xlink:href="#check-circle-fill" />
@@ -131,15 +137,15 @@
                                 role="img" aria-label="Danger:">
                                 <use xlink:href="#exclamation-triangle-fill" />
                             </svg>
-                        </div>
+                        </button>
 
                         <!-- answer B -->
-                        <div id="answerContainer2" onclick="answer(2)"
+                        <button id="answerButton2" onclick="answer(2)"
                             class="alert alert-light d-flex align-items-center rounded-0 answerBtn answerBtnHover cp w-100 mb-1 mb-sm-3 p-1 p-sm-3"
                             role="alert">
                             <span id="answerBadge2"
                                 class="badge text-black rounded-0 me-2 me-md-5 badgeLight p-3">B</span>
-                            <div id="answer2"></div>
+                            <div id="answer2" class="text-start"></div>
                             <svg id="rightAnswerSymbol2" class="bi flex-shrink-0 ms-auto d-none" width="24" height="24"
                                 role="img" aria-label="Success:">
                                 <use xlink:href="#check-circle-fill" />
@@ -148,32 +154,32 @@
                                 role="img" aria-label="Danger:">
                                 <use xlink:href="#exclamation-triangle-fill" />
                             </svg>
-                        </div>
+                        </button>
 
                         <!-- answer C -->
-                        <div id="answerContainer3" onclick="answer(3)"
+                        <button id="answerButton3" onclick="answer(3)"
                             class="alert alert-light d-flex align-items-center rounded-0 answerBtn answerBtnHover cp w-100 mb-1 mb-sm-3 p-1 p-sm-3"
                             role="alert">
                             <span id="answerBadge3"
                                 class="badge text-black rounded-0 me-2 me-md-5 badgeLight p-3">C</span>
-                            <div id="answer3"></div>
+                            <div id="answer3" class="text-start"></div>
                             <svg id="rightAnswerSymbol3" class="bi flex-shrink-0 ms-auto d-none" width="24" height="24"
                                 role="img" aria-label="Success:">
                                 <use xlink:href="#check-circle-fill" />
                             </svg>
                             <svg id="wrongAnswerSymbol3" class="bi flex-shrink-0 ms-auto d-none" width="24" height="24"
-                                role="img" aria-label="Danger:">
+                                role="img" aria-label="Danger:">8
                                 <use xlink:href="#exclamation-triangle-fill" />
                             </svg>
-                        </div>
+                        </button>
 
                         <!-- answer D -->
-                        <div id="answerContainer4" onclick="answer(4)"
+                        <button id="answerButton4" onclick="answer(4)"
                             class="alert alert-light d-flex align-items-center rounded-0 answerBtn answerBtnHover cp w-100 mb-1 mb-sm-3 p-1 p-sm-3"
                             role="alert">
                             <span id="answerBadge4"
                                 class="badge text-black rounded-0 me-2 me-md-5 badgeLight p-3">D</span>
-                            <div id="answer4"></div>
+                            <div id="answer4" class="text-start"></div>
                             <svg id="rightAnswerSymbol4" class="bi flex-shrink-0 ms-auto d-none" width="24" height="24"
                                 role="img" aria-label="Success:">
                                 <use xlink:href="#check-circle-fill" />
@@ -182,7 +188,7 @@
                                 role="img" aria-label="Danger:">
                                 <use xlink:href="#exclamation-triangle-fill" />
                             </svg>
-                        </div>
+                        </button>
                         <!-- endregion answers -->
 
                         <!-- #region chevrons -->
@@ -230,9 +236,13 @@
                     <!-- endregion content end screen-->
 
                 </div>
+                <!-- endregion navbarContent -->
+
             </div>
+
         </div>
-        <!-- endregion navbarContent -->
+        <!-- endregion progressBarNavbarContent  -->
+
     </div>
     <!-- endregion appWindow-->
 
@@ -262,6 +272,7 @@
     <script src="questions.js"></script>
     <script src="script.js"></script>
     <script src="showInfoFktnNotExists.js"></script>
+    <noscript>Bitte JavaScript aktivieren!</noscript>
 
 </body>
 
